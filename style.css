@@ -1,0 +1,36 @@
+p {
+    margin: 0 0 0.2em 0;
+}
+
+hr {
+    visibility: hidden;
+}
+
+textarea {
+    resize: vertical;
+    font-size: 16px;
+    word-break: break-all;
+    white-space: pre;
+}
+
+
+table#testcases {
+    width: 100%;
+}
+
+table#testcases td {
+    vertical-align: top;
+}
+
+table#testcases textarea {
+    width: 98%;
+    height: 4.5em;
+}
+
+
+.CodeMirror {
+    border: solid 1px #999;
+    height: 20em;
+    resize: vertical;
+    font-size: 16px;
+}
