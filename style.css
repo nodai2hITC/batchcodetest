@@ -14,6 +14,11 @@ textarea {
 }
 
 
+textarea#atcoder_html {
+    width: 75%;
+    height: 3em;
+}
+
 table#testcases {
     width: 100%;
 }
@@ -23,7 +28,7 @@ table#testcases td {
 }
 
 table#testcases textarea {
-    width: 98%;
+    width: 95%;
     height: 4.5em;
 }
 

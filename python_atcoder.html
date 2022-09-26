@@ -11,17 +11,16 @@
     <script src="batchcodetest.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.21.0/full/pyodide.js"></script>
     <script src="python.js"></script>
-    <title>一括コードテスト (Python - 通常版) <a href="https://github.com/nodai2hITC/batchcodetest#%E4%B8%80%E6%8B%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%83%86%E3%82%B9%E3%83%88">使い方</a></title>
+    <title>一括コードテスト (Python - AtCoder 版)</title>
   </head>
 
   <body>
-    <h1>一括コードテスト (Python - 通常版)</h1>
+    <h1>一括コードテスト (Python - AtCoder 版) <a href="https://github.com/nodai2hITC/batchcodetest#%E4%B8%80%E6%8B%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%83%86%E3%82%B9%E3%83%88">使い方</a></h1>
+    <div id="atcoder">
+      <textarea id="atcoder_html" placeholder="AtCoder の問題ページの HTML を丸ごとコピペしてください。"></textarea>
+      <button id="scraping">入出力例を取得</button>
+    </div>
     <table id="testcases">
-      <tr>
-        <td>入力例1<br /><textarea id="testcase1_input"></textarea></td>
-        <td>出力例1<br /><textarea id="testcase1_output"></textarea></td>
-        <td>実際の結果1 <span id="testcase1_time"></span><br /><textarea id="testcase1_result" readonly></textarea></td>
-      </tr>
     </table>
     <p><button id="add_testcase">テストケースを追加</button></p>
     <hr />

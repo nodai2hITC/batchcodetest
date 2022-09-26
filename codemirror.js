@@ -7,6 +7,7 @@ const Editor = {
 
   insert: function(text) {
     this.editor.replaceSelection(text);
+    this.editor.focus();
   }
 }
 

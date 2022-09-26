@@ -1,7 +1,19 @@
 "use strict";
 
 const BatchCodeTest = {
-  tests_num: 1,
+  addTestCase: function(input, output) {
+    let i = 1;
+    while (document.getElementById(`testcase${i}_input`)) i++;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+    <td>入力例${i}<br /><textarea id="testcase${i}_input">${input.replaceAll("")}</textarea></td>
+    <td>出力例${i}<br /><textarea id="testcase${i}_output">${output}</textarea></td>
+    <td>実際の結果${i} <span id="testcase${i}_time"></span><br /><textarea id="testcase${i}_result" readonly></textarea></td>
+    `.trim();
+    document.getElementById("testcases").appendChild(tr);
+    document.getElementById(`testcase${i}_input` ).value =  input;
+    document.getElementById(`testcase${i}_output`).value = output;
+  },
 
   disableRunButton: function() {
     this.runButton.disabled = true;
@@ -10,7 +22,7 @@ const BatchCodeTest = {
 
   enableRunButton: function() {
     this.runButton.disabled = false;
-    this.runButton.innerHTML = "▶実行";
+    this.runButton.innerHTML = "▶実行 (Ctrl+Enter)";
   },
 
   copyProgram: function() {
@@ -27,20 +39,24 @@ const BatchCodeTest = {
     setTimeout(async function() {
       let allPassed = true;
       const program = Editor.getProgram();
-      for (let i = 1; i <= BatchCodeTest.tests_num; i++){
+      let i = 1;
+      while (document.getElementById(`testcase${i}_input`)) {
         await new Promise(resolve => requestAnimationFrame(resolve));
         const result = await BatchCodeTest.test(i, program);
         if (result != "AC") allPassed = false;
+        i++;
       }
       BatchCodeTest.enableRunButton();
     }, 20);
   },
 
   initializeResult: function() {
-    for (let i = 1; i <= BatchCodeTest.tests_num; i++) {
+    let i = 1;
+    while (document.getElementById(`testcase${i}_input`)) {
       document.getElementById(`testcase${i}_result`).innerText = "";
-      document.getElementById(`testcase${i}_result`).style.borderColor = "";
+      document.getElementById(`testcase${i}_result`).style.backgroundColor = "";
       document.getElementById(`testcase${i}_time`).innerText = "";
+      i++;
     }
   },
 
@@ -59,7 +75,7 @@ const BatchCodeTest = {
     }
     const execTime = (performance.now() - startTime).toFixed(0) + " ms";
     document.getElementById(`testcase${i}_result`).innerHTML = output;
-    document.getElementById(`testcase${i}_result`).style.borderColor = result == "AC" ? "#00ff00" : "#ff0000";
+    document.getElementById(`testcase${i}_result`).style.backgroundColor = result == "AC" ? "#ccffcc" : "#ffcccc";
     document.getElementById(`testcase${i}_time`).innerText = `(${execTime})`;
     return result;
   },
@@ -73,21 +89,13 @@ const BatchCodeTest = {
 
 window.addEventListener("DOMContentLoaded", event => {
   document.getElementById("add_testcase").onclick = function(){
-    BatchCodeTest.tests_num++;
-    const i = BatchCodeTest.tests_num;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-    <td>入力例${i}<br /><textarea id="testcase${i}_input"></textarea></td>
-    <td>出力例${i}<br /><textarea id="testcase${i}_output"></textarea></td>
-    <td>実際の結果${i} <span id="testcase${i}_time"></span><br /><textarea id="testcase${i}_result" readonly></textarea></td>
-    `.trim();
-    document.getElementById("testcases").appendChild(tr);
+    BatchCodeTest.addTestCase("", "");
   };
 
   const snipets = document.getElementsByClassName("snipet");
   for (let snipet of snipets) {
     snipet.onclick = function() {
-      Editor.insert(this.innerText);
+      Editor.insert(this.innerText + "\n");
     }
   };
 
