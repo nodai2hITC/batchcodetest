@@ -6,9 +6,9 @@ const BatchCodeTest = {
     while (document.getElementById(`testcase${i}_input`)) i++;
     const tr = document.createElement("tr");
     tr.innerHTML = `
-    <td>入力例${i}<br /><textarea id="testcase${i}_input">${input.replaceAll("")}</textarea></td>
-    <td>出力例${i}<br /><textarea id="testcase${i}_output">${output}</textarea></td>
-    <td>実際の結果${i} <span id="testcase${i}_time"></span><br /><textarea id="testcase${i}_result" readonly></textarea></td>
+    <td>入力例${i}<br /><textarea id="testcase${i}_input" class="input">${input.replaceAll("")}</textarea></td>
+    <td>出力例${i}<br /><textarea id="testcase${i}_output" class="output">${output}</textarea></td>
+    <td>実際の結果${i} <span id="testcase${i}_time"></span><br /><textarea id="testcase${i}_result" class="result" readonly></textarea></td>
     `.trim();
     document.getElementById("testcases").appendChild(tr);
     document.getElementById(`testcase${i}_input` ).value =  input;
