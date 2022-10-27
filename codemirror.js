@@ -5,8 +5,17 @@ const Editor = {
     return this.editor.getValue();
   },
 
+  setProgram: function(value) {
+    return this.editor.setValue(value);
+  },
+
   insert: function(text) {
     this.editor.replaceSelection(text);
+    this.editor.focus();
+  },
+
+  clear: function() {
+    this.editor.setValue("");
     this.editor.focus();
   }
 }

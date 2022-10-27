@@ -5,35 +5,63 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="micromodal.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/ruby/ruby.min.js"></script>
     <script src="codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/micromodal/0.4.10/micromodal.min.js"></script>
+    <script>
+      const workerFile = "ruby.js";
+    </script>
     <script src="batchcodetest.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@0.3.0-2022-09-14-a/dist/browser.umd.js"></script>
-    <script src="ruby.js"></script>
-    <title>一括コードテスト (Ruby - 通常版)</title>
+    <title>一括コードテスト (Ruby)</title>
   </head>
 
   <body>
-    <h1>一括コードテスト (Ruby - 通常版) <a href="https://github.com/nodai2hITC/batchcodetest#%E4%B8%80%E6%8B%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%83%86%E3%82%B9%E3%83%88">使い方</a></h1>
-    <table id="testcases">
-      <tr>
-        <td>入力例1<br /><textarea id="testcase1_input" class="input"></textarea></td>
-        <td>出力例1<br /><textarea id="testcase1_output" class="output"></textarea></td>
-        <td>実際の結果1 <span id="testcase1_time"></span><br /><textarea id="testcase1_result" class="result" readonly></textarea></td>
-      </tr>
-    </table>
-    <p><button id="add_testcase">テストケースを追加</button></p>
+    <h1>一括コードテスト (Ruby) <a href="https://github.com/nodai2hITC/batchcodetest#%E4%B8%80%E6%8B%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%83%86%E3%82%B9%E3%83%88">使い方</a></h1>
+    <table id="testcases"></table>
+    <p>
+      <button id="add_testcase">テストケースを追加</button> 
+      <button id="scrape_testcases">問題ページHTMLから読み込み</button> 
+      <button id="clear_testcases">テストケースをすべて削除</button>
+    </p>
     <hr />
     <p>
       <button id="run" disabled>準備中</button> 
+      <input type="number" id="time" value="5" min="1" />秒でTLE 
       <input type="checkbox" id="autocopy" checked /><label for="autocopy">実行時にプログラムを自動的にコピーしておく</label> 
+    </p>
+    <textarea id="txt-editor"></textarea>
+    <p>
+      <button id="clear">すべて消去</button> 
       <button class="snipet"> = gets.to_i</button> 
       <button class="snipet"> = gets.to_f</button> 
       <button class="snipet"> = gets.chomp</button> 
       <button class="snipet"> = gets.split.map(&amp;:to_i)</button>
     </p>
-    <textarea id="txt-editor"></textarea>
+
+    <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+          <header class="modal__header">
+            <h2 class="modal__title" id="modal-1-title">
+              問題ページ HTML から読み込み
+            </h2>
+            <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+          </header>
+          <main class="modal__content" id="modal-1-content">
+            <p>
+              問題ページを開き、右クリックして「ページのソースを表示」(または Ctrl+U) → Ctrl+Aですべて選択 → Ctrl+Cでコピー → 下のテキストボックスに貼り付けて「読み込み」ボタンを押してください。
+            </p>
+            <textarea id="html"></textarea>
+          </main>
+          <footer class="modal__footer">
+            <button class="modal__btn modal__btn-primary" id="scrape">読み込み</button>
+            <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">キャンセル</button>
+          </footer>
+        </div>
+      </div>
+    </div>
 
     <script>
 Editor.editor = CodeMirror.fromTextArea(document.getElementById("txt-editor"), {

@@ -1,0 +1,75 @@
+<html>
+<head>
+<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+<style>
+.modal {
+  display: none;
+}
+.modal.is-open {
+  display: block;
+}
+
+</style>
+</head>
+<body>
+
+
+    <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+      <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+        <div
+          class="modal-container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-1-title"
+        >
+          <div class="modal-content" id="modal-1-content">
+            <p class="modal-text">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+              do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum
+              dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+              cupidatat non proident, sunt in culpa qui officia deserunt
+              mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+              do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum
+              dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+              cupidatat non proident, sunt in culpa qui officia deserunt
+              mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+              do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum
+              dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+              cupidatat non proident, sunt in culpa qui officia deserunt
+              mollit anim id est laborum.
+            </p>
+            <!-- /.modal-text -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 開くボタン -->
+    <button data-micromodal-trigger="modal-1" class="modal-open">
+      open
+    </button>
+    
+    
+<script>
+
+
+MicroModal.init({
+  disableScroll: true,
+  awaitOpenAnimation: true,
+  awaitCloseAnimation: true
+});
+
+
+  </script>
+</body>
+</html>

@@ -1,28 +1,41 @@
 "use strict";
 
-{
-  const pythonInitialize = async function() {
-    BatchCodeTest.pyodideReadyPromise = await loadPyodide();
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.21.0/full/pyodide.js");
 
-    if ("pythonPackages" in BatchCodeTest) {
-      await BatchCodeTest.pyodideReadyPromise.loadPackage(BatchCodeTest.pythonPackages);
-    }
-    BatchCodeTest.enableRunButton();
-  }
-  window.addEventListener("load", pythonInitialize);
-};
+async function loadPyodideAndPackages() {
+  self.pyodide = await loadPyodide();
+  await self.pyodide.loadPackage(["numpy", "scipy", "scikit-learn", "networkx"]);
+  self.postMessage(["init"]);
+}
+let pyodideReadyPromise = loadPyodideAndPackages();
 
-BatchCodeTest.runProgram = async function(program, input) {
-  const pyodide = await BatchCodeTest.pyodideReadyPromise;
-  const globals = pyodide.toPy({});
-  pyodide.runPython(`
+self.addEventListener("message", async function(e) {
+  switch(e.data[0]) {
+    case "test":
+      await pyodideReadyPromise;
+      const data = e.data[1];
+      const caseName = data.caseName;
+      const program  = data.program;
+      const input    = data.input;
+
+      const globals = self.pyodide.toPy({});
+      self.pyodide.runPython(`
 import sys, io
 
-_in = io.StringIO('''${this.escape(input)}''')
+_in = io.StringIO('''${input.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}''')
 sys.stdin = _in
 _out = io.StringIO()
 sys.stdout = sys.stderr = _out
-`, { globals: globals});
-  pyodide.runPython(program, { globals: pyodide.toPy({}) });
-  return pyodide.runPython("_out.getvalue()", { globals: globals });
-};
+      `, { globals: globals});
+      const startTime = performance.now();
+      let output = "";
+      try {
+        self.pyodide.runPython(program, { globals: self.pyodide.toPy({}) });
+        output = self.pyodide.runPython("_out.getvalue()", { globals: globals });
+      } catch(err) {
+        output = err.toString();
+      }
+      const execTime = performance.now() - startTime;
+      self.postMessage(["result", { caseName: caseName, output: output, execTime: execTime }]);
+  }
+});
