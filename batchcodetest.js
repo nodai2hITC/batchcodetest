@@ -63,8 +63,10 @@ const BatchCodeTest = {
     const outputs1 = Array.from(html.matchAll(/<h3>出力例 *\d+<\/h3>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
     const inputs2  = Array.from(html.matchAll(/<h6>入力<\/h6>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
     const outputs2 = Array.from(html.matchAll(/<h6>出力<\/h6>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    const inputs  =  inputs1.concat( inputs2);
-    const outputs = outputs1.concat(outputs2);
+    const inputs3  = Array.from(html.matchAll(/<h2>入力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
+    const outputs3 = Array.from(html.matchAll(/<h2>出力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
+    const inputs  =  inputs1.concat( inputs2).concat( inputs3);
+    const outputs = outputs1.concat(outputs2).concat(outputs3);
     for (let i = 0; i < inputs.length; i++) {
       if (! outputs[i]) break;
       this.addTestCase(inputs[i], outputs[i]);
@@ -212,16 +214,16 @@ const BatchCodeTest = {
       this.clearTestCases();
       this.addTestCase("", "");
     };
-  
+
     this.setRunButton("準備中");
-  
+
     document.getElementById("clear").onclick = () => { Editor.clear(); };
-  
+
     const snipets = document.getElementsByClassName("snipet");
     for (let snipet of snipets) {
       snipet.onclick = function() { Editor.insert(this.innerText + "\n"); };
     };
-  
+
     this.load();
     if (this.testCaseLength() == 0) this.addTestCase("", "");
     setInterval(() => { this.save() }, 5000);
