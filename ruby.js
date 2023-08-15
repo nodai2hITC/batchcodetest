@@ -35,7 +35,10 @@ $stdout = $stderr = StringIO.new(+'', 'w')
         vm.eval(program);
         output = vm.eval("$stdout.string").toString();
       } catch(err) {
-        output = err.toString();
+        if (err.toString().indexOf("SystemExit") != -1)
+          output = vm.eval("$stdout.string").toString();
+        else
+          output = err.toString();
       }
       const execTime = performance.now() - startTime;
       self.postMessage(["result", { caseName: caseName, output: output, execTime: execTime }]);
