@@ -127,6 +127,7 @@ const BatchCodeTest = {
     if (! result) return;
     result.value = output;
     result.style.backgroundColor = ac ? "#ccffcc" : "#ffcccc";
+    if (output.indexOf("Error") != -1) result.scrollTop = result.scrollHeight;
     document.getElementById(`${caseName}_time`).innerText = `- ${execTime.toFixed(0)} ms`;
   },
 
