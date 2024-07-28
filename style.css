@@ -43,7 +43,7 @@ table#testcases textarea {
 
 .CodeMirror {
     border: solid 1px #999;
-    height: 20em;
+    height: auto;
     resize: vertical;
     font-size: 16px;
 }

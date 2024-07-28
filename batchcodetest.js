@@ -36,6 +36,17 @@ const BatchCodeTest = {
   },
 
 
+  resizeObserver: new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const matched = entry.target.id.match(/^testcase\d+_/);
+      if (!matched) continue;
+      const height = entry.target.style.height;
+      document.getElementById(matched[0] + "input" ).style.height = height;
+      document.getElementById(matched[0] + "output").style.height = height;
+      document.getElementById(matched[0] + "result").style.height = height;
+    }
+  }),
+
   addTestCase: function(input, output) {
     const i = this.testCaseLength() + 1;
     const tr = document.createElement("tr");
@@ -55,6 +66,10 @@ const BatchCodeTest = {
     document.getElementById("testcases").appendChild(tr);
     document.getElementById(`testcase${i}_input` ).value =  input;
     document.getElementById(`testcase${i}_output`).value = output;
+
+    this.resizeObserver.observe(document.getElementById(`testcase${i}_input`));
+    this.resizeObserver.observe(document.getElementById(`testcase${i}_output`));
+    this.resizeObserver.observe(document.getElementById(`testcase${i}_result`));
   },
 
   scrape: function(html) {
@@ -75,11 +90,17 @@ const BatchCodeTest = {
   },
 
   clearTestCases: function() {
+    const textareas = document.getElementsByTagName("textarea");
+    for (const textarea of textareas) {
+      if (!textarea.id.match(/^testcase\d+_/)) continue;
+      this.resizeObserver.unobserve(textarea);
+    }
     document.getElementById("testcases").innerHTML = "";
   },
 
 
   run: function() {
+    if (document.getElementById("run").disabled) return;
     this.setRunButton("■停止", this.stop);
     if (document.getElementById("autocopy").checked) this.copyProgram();
     this.initializeResult();
