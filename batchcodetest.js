@@ -80,8 +80,10 @@ const BatchCodeTest = {
     const outputs2 = Array.from(html.matchAll(/<h6>出力<\/h6>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
     const inputs3  = Array.from(html.matchAll(/<h2>入力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
     const outputs3 = Array.from(html.matchAll(/<h2>出力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    const inputs  =  inputs1.concat( inputs2).concat( inputs3);
-    const outputs = outputs1.concat(outputs2).concat(outputs3);
+    const inputs4  = Array.from(html.matchAll(/<b>入力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
+    const outputs4 = Array.from(html.matchAll(/<b>出力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
+    const inputs  =  inputs1.concat( inputs2).concat( inputs3).concat( inputs4);
+    const outputs = outputs1.concat(outputs2).concat(outputs3).concat(outputs4);
     for (let i = 0; i < inputs.length; i++) {
       if (! outputs[i]) break;
       this.addTestCase(inputs[i], outputs[i]);
