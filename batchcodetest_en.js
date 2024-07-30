@@ -82,8 +82,11 @@ const BatchCodeTest = {
     const outputs3 = Array.from(html.matchAll(/<h2>出力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
     const inputs4  = Array.from(html.matchAll(/<b>入力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
     const outputs4 = Array.from(html.matchAll(/<b>出力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
-    const inputs  =  inputs1.concat( inputs2).concat( inputs3).concat( inputs4);
-    const outputs = outputs1.concat(outputs2).concat(outputs3).concat(outputs4);
+    const ios5 = Array.from(html.matchAll(/>サンプルケース \d+<\/h4>(.+?<h5>期待される出力値<\/h5>.+?)<\/div><\/button><\/div><\/div>/gis), m => m[1]);
+    const inputs5  = ios5.map((s) => { const m = s.match(/<h5>入力値<\/h5>.+?<code>(.+?)<\/code>/is); return m[1] });
+    const outputs5 = ios5.map((s) => { const m = s.match(/<h5>期待される出力値<\/h5>.+?<code>(.+?)<\/code>/is); return m[1] });
+    const inputs  =  inputs1.concat( inputs2).concat( inputs3).concat( inputs4).concat( inputs5);
+    const outputs = outputs1.concat(outputs2).concat(outputs3).concat(outputs4).concat(outputs5);
     for (let i = 0; i < inputs.length; i++) {
       if (! outputs[i]) break;
       this.addTestCase(inputs[i], outputs[i]);
