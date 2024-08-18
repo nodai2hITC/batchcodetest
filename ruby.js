@@ -1,17 +1,15 @@
 "use strict";
 
-importScripts("https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.1.0/dist/browser.umd.js");
+importScripts("https://cdn.jsdelivr.net/npm/@ruby/wasm-wasi@2.6.2/dist/browser.umd.js");
 
 let RubyModule;
 
 const { DefaultRubyVM } = this["ruby-wasm-wasi"];
 const main = async () => {
   const response = await fetch(
-    "https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@2.1.0/dist/ruby+stdlib.wasm"
+    "https://cdn.jsdelivr.net/npm/@ruby/3.3-wasm-wasi@2.6.2/dist/ruby+stdlib.wasm"
     );
-  const buffer = await response.arrayBuffer();
-  const module = await WebAssembly.compile(buffer);
-  RubyModule = module;
+  RubyModule = await WebAssembly.compileStreaming(response)
   self.postMessage(["init"]);
 };
 main();
