@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js");
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js");
 
 async function loadPyodideAndPackages() {
   self.pyodide = await loadPyodide();
