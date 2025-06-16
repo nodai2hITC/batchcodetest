@@ -5,12 +5,23 @@ const BatchCodeTest = {
   timer: null,
   currentTestCase: 0,
   testCases: [],
+  words: {
+    "▶Run": "▶Run (Ctrl+Enter)",
+    "Input ": "Input ",
+    "Output ": "Output ",
+    "Result ": "Result ",
+    "■Stop": "■Stop",
+    "【TLE】": "【TLE】\nThe program did not finish within the set time.",
+    "in preparation": "in preparation"
+  },
+  scrapes: [],
+  make_input: undefined,
 
 
   workerEvent: function(e) {
     switch(e.data[0]){
       case "init":
-        this.setRunButton("▶実行 (Ctrl+Enter)", this.run);
+        this.setRunButton(this.words["▶Run"], this.run);
         break;
       case "result":
         clearTimeout(this.timer);
@@ -52,14 +63,14 @@ const BatchCodeTest = {
     const tr = document.createElement("tr");
     tr.innerHTML = `
     <td>
-      入力例${i}<br />
+      ${this.words["Input "]}${i}<br />
       <textarea id="testcase${i}_input" class="input"></textarea>
     </td>
     <td>
-      出力例${i}<br />
+    ${this.words["Output "]}${i}<br />
       <textarea id="testcase${i}_output" class="output"></textarea>
     </td>
-    <td>実際の結果${i} <span id="testcase${i}_time"></span><br />
+    <td>${this.words["Result "]}${i} <span id="testcase${i}_time"></span><br />
       <textarea id="testcase${i}_result" class="result" readonly></textarea>
     </td>
     `.trim();
@@ -74,34 +85,23 @@ const BatchCodeTest = {
 
   scrape: function(html) {
     this.clearTestCases();
-    // https://atcoder.jp/
-    const inputs1  = Array.from(html.matchAll(/<h3>入力例 *\d+<\/h3>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    const outputs1 = Array.from(html.matchAll(/<h3>出力例 *\d+<\/h3>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    // https://yukicoder.me/
-    const inputs2  = Array.from(html.matchAll(/<h6>入力<\/h6>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    const outputs2 = Array.from(html.matchAll(/<h6>出力<\/h6>\s*<pre>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    // https://nodai2hitc.github.io/problems/
-    const inputs3  = Array.from(html.matchAll(/<h2>入力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    const outputs3 = Array.from(html.matchAll(/<h2>出力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
-    // https://www2.ioi-jp.org/joi/2020/2021-yo1/index.html
-    const inputs4  = Array.from(html.matchAll(/<b>入力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
-    const outputs4 = Array.from(html.matchAll(/<b>出力例 *\d+<\/b><br>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
-    // https://techful-programming.com/
-    const ios5 = Array.from(html.matchAll(/>サンプルケース \d+<\/h4>(.+?<h5>期待される出力値<\/h5>.+?)<\/div><\/button><\/div><\/div>/gis), m => m[1]);
-    const inputs5  = ios5.map((s) => { const m = s.match(/<h5>入力値<\/h5>.+?<code>(.+?)<\/code>/is); return m[1] });
-    const outputs5 = ios5.map((s) => { const m = s.match(/<h5>期待される出力値<\/h5>.+?<code>(.+?)<\/code>/is); return m[1] });
-    // https://algo-method.com/
-    const inputs6  = Array.from(html.matchAll(/入力例 \d+\\r\\n```IOExample\\r\\n(.*?)\\r\\n```/gis), m => m[1].replaceAll("\\r\\n", "\n"));
-    const outputs6 = Array.from(html.matchAll(/出力例 \d+\\r\\n```IOExample\\r\\n(.*?)\\r\\n```/gis), m => m[1].replaceAll("\\r\\n", "\n"));
-    // https://www2.ioi-jp.org/joi/2022/2023-yo1/index.html
-    const inputs7  = Array.from(html.matchAll(/<h2[^>]*>\s*入力例 *\d+<\/h2>\s*<p[^>]*>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
-    const outputs7 = Array.from(html.matchAll(/<h2[^>]*>\s*出力例 *\d+<\/h2>\s*<p[^>]*>\s*(.+?)\s*<\/p>/gis), m => m[1].replaceAll("<br>", ""));
+    let inputs = [], outputs = [], input = undefined, constraints = undefined;
+    for (const i of this.scrapes) {
+      if (i.check(html)) [inputs, outputs, input, constraints] = i.scrape(html);
+      if (input) input = input.replaceAll(/^\s+/mg, "").replaceAll(/\s+$/mg, "")
+      if (constraints) constraints = constraints.replaceAll(/^\s+/mg, "").replaceAll(/\s+$/mg, "")
+    }
 
-    const inputs  =  inputs1.concat( inputs2).concat( inputs3).concat( inputs4).concat( inputs5).concat( inputs6).concat( inputs7);
-    const outputs = outputs1.concat(outputs2).concat(outputs3).concat(outputs4).concat(outputs5).concat(outputs6).concat(outputs7);
     for (let i = 0; i < inputs.length; i++) {
       if (! outputs[i]) break;
       this.addTestCase(inputs[i], outputs[i]);
+    }
+    const make_input_elm = document.getElementById("make_input");
+    if (make_input_elm && make_input_elm.checked && this.make_input) {
+      Editor.clear();
+      const input_code = input ? this.make_input(input, constraints || "") : "";
+      if (input_code) Editor.insert(input_code);
+      else            Editor.insert("# 入力コードの生成ができませんでした。ご注意ください。\n");
     }
     if (this.testCaseLength() == 0) this.addTestCase("", "");
   },
@@ -118,7 +118,7 @@ const BatchCodeTest = {
 
   run: function() {
     if (document.getElementById("run").disabled) return;
-    this.setRunButton("■停止", this.stop);
+    this.setRunButton(this.words["■Stop"], this.stop);
     if (document.getElementById("autocopy").checked) this.copyProgram();
     this.initializeResult();
 
@@ -150,7 +150,7 @@ const BatchCodeTest = {
     const testCase = this.testCases[this.currentTestCase];
     this.currentTestCase++;
     if (this.currentTestCase > this.testCases.length) {
-      this.setRunButton("▶実行 (Ctrl+Enter)", this.run);
+      this.setRunButton(this.words["▶Run"], this.run);
       return;
     }
     this.worker.postMessage(["test", testCase]);
@@ -172,14 +172,14 @@ const BatchCodeTest = {
   timeLimit: function() {
     const result = document.getElementById(`testcase${this.currentTestCase}_result`);
     if (! result) return;
-    result.value = "【TLE】\n実行時間以内にプログラムが終了しませんでした。";
+    result.value = this.words["【TLE】"]
     result.style.backgroundColor = "#ffcccc";
     clearTimeout(this.timer);
     this.stop();
   },
 
   stop: function() {
-    this.setRunButton("準備中");
+    this.setRunButton(this.words["in preparation"]);
     this.resetWorker();
   },
 
@@ -242,6 +242,7 @@ const BatchCodeTest = {
     document.getElementById("add_testcase").onclick = () => { this.addTestCase("", ""); };
     document.getElementById("scrape_testcases").onclick = () => {
       document.getElementById("html").value = "";
+      document.getElementById("html").focus();
       MicroModal.show("modal-1");
     };
     document.getElementById("scrape").onclick = () => {
@@ -254,7 +255,7 @@ const BatchCodeTest = {
       this.addTestCase("", "");
     };
 
-    this.setRunButton("準備中");
+    this.setRunButton(this.words["in preparation"]);
 
     document.getElementById("clear").onclick = () => { Editor.clear(); };
 

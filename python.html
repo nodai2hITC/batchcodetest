@@ -14,6 +14,24 @@
       const workerFile = "python.js";
     </script>
     <script src="batchcodetest.js"></script>
+    <script src="scrape/atcoder.js"></script>
+    <script src="scrape/yukicoder.js"></script>
+    <script src="scrape/joi.js"></script>
+    <script src="scrape/algo.js"></script>
+    <script src="scrape/techful.js"></script>
+    <script src="scrape/nodai2hitc.js"></script>
+    <script src="python_make_input.js"></script>
+    <script>
+BatchCodeTest.words = {
+  "▶Run": "▶実行 (Ctrl+Enter)",
+  "Input ": "入力例",
+  "Output ": "出力例",
+  "Result ": "実際の結果",
+  "■Stop": "■停止",
+  "【TLE】": "【TLE】\n実行時間以内にプログラムが終了しませんでした。",
+  "in preparation": "準備中"
+}
+    </script>
     <title>一括コードテスト (Python)</title>
   </head>
 
@@ -21,8 +39,8 @@
     <h1>一括コードテスト (Python) <a href="https://github.com/nodai2hITC/batchcodetest#%E4%B8%80%E6%8B%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%83%86%E3%82%B9%E3%83%88">使い方</a></h1>
     <table id="testcases"></table>
     <p>
-      <button id="add_testcase">テストケースを追加</button>
       <button id="scrape_testcases">問題ページHTMLから読み込み</button>
+      <button id="add_testcase">テストケースを追加</button>
       <button id="clear_testcases">テストケースをすべて削除</button>
     </p>
     <hr />
@@ -34,14 +52,14 @@
     <textarea id="txt-editor">
 
 </textarea>
-    <p>
-      <button id="clear">すべて消去</button>　
-      <button class="snipet"> = int(input())</button>←1行に整数1つ　
-      <button class="snipet"> = input()</button>←1行に文字列1つ　
-      <button class="snipet"> = list(map(int, input().split()))</button>←1行に整数不定数
-      <br>
-      <button class="snipet"> = map(int, input().split())</button>←1行に整数固定数
-    </p>
+    <p><button id="clear">すべて消去</button></p>
+    <p>以下のボタンで、定型コードを入力できます。</p>
+    <ul>
+      <li><button class="snipet"> = int(input())</button> ←1行に整数1つ 例）<var>A</var></li>
+      <li><button class="snipet"> = input()</button> ←1行に文字列1つ 例）<var>S</var></li>
+      <li><button class="snipet"> = list(map(int, input().split()))</button> ←1行に整数不定数 例）<var>A<sub>1</sub> A<sub>2</sub> … A<sub>N</sub> </var></li>
+      <li><button class="snipet"> = map(int, input().split())</button> ←1行に整数固定数 例）<var>A B C</var></li>
+    </ul>
 
     <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -59,6 +77,7 @@
             <textarea id="html"></textarea>
           </main>
           <footer class="modal__footer">
+            <p><input type="checkbox" id="make_input" checked /><label for="make_input">入力用コードを自動生成（β版）</label></p>
             <button class="modal__btn modal__btn-primary" id="scrape">読み込み</button>
             <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">キャンセル</button>
           </footer>
