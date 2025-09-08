@@ -93,7 +93,7 @@ const BatchCodeTest = {
     }
 
     for (let i = 0; i < inputs.length; i++) {
-      if (! outputs[i]) break;
+      if (outputs[i] === undefined) break;
       this.addTestCase(inputs[i], outputs[i]);
     }
     const make_input_elm = document.getElementById("make_input");

@@ -17,7 +17,7 @@ BatchCodeTest.make_input = function(_input, constraints) {
     let code = ""
     while (input != "") {
         let matched
-        if (matched = input.match(/^\s*((.).*)\n(?:\2.*\n)*?.*\\vdots.*\n\2(?:[^_]*_\{?|\s*query\s*(?:[^a-z]+\s*)?)([^},) ]+).*\n/i)) {
+        if (matched = input.match(/^\s*((.).*)\n(?:\2.*\n)*?.*(?::|\\vdots).*\n\2(?:[^_]*_\{?|\s*query\s*(?:[^a-z]+\s*)?)([^},) ]+).*\n/i)) {
             // 複数行の場合
             const n = matched[3]
             const line = matched[1]
