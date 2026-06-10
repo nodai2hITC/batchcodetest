@@ -33,10 +33,8 @@ sys.stdout = sys.stderr = _out
         self.pyodide.runPython(program, { globals: self.pyodide.toPy({}) });
         output = self.pyodide.runPython("_out.getvalue()", { globals: globals });
       } catch(err) {
-        if (err.toString().indexOf("SystemExit") != -1)
-          output = self.pyodide.runPython("_out.getvalue()", { globals: globals });
-        else
-          output = outputError(err.toString(), program);
+        output = self.pyodide.runPython("_out.getvalue()", { globals: globals });
+        if (err.toString().indexOf("SystemExit") == -1) output += "\n" + outputError(err.toString(), program);
       }
       const execTime = performance.now() - startTime;
       self.postMessage(["result", { caseName: caseName, output: output, execTime: execTime }]);
