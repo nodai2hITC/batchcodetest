@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="micromodal.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closebrackets.min.js"></script>
     <script src="codemirror.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/micromodal/0.4.10/micromodal.min.js"></script>
     <script>
@@ -53,13 +54,19 @@ BatchCodeTest.words = {
 
 </textarea>
     <p><button id="clear">すべて消去</button></p>
+    <hr />
     <p>以下のボタンで、定型コードを入力できます。</p>
-    <ul>
-      <li><button class="snipet"> = int(input())</button> ←1行に整数1つ 例）<var>A</var></li>
-      <li><button class="snipet"> = input()</button> ←1行に文字列1つ 例）<var>S</var></li>
-      <li><button class="snipet"> = list(map(int, input().split()))</button> ←1行に整数不定数 例）<var>A<sub>1</sub> A<sub>2</sub> … A<sub>N</sub> </var></li>
-      <li><button class="snipet"> = map(int, input().split())</button> ←1行に整数固定数 例）<var>A B C</var></li>
-    </ul>
+
+    <fieldset>
+      <legend>入力処理</legend>
+      <ul>
+        <li><button class="snipet"> = int(input())</button> ←1行に整数1つ 例）<var>A</var></li>
+        <li><button class="snipet"> = input()</button> ←1行に文字列1つ 例）<var>S</var></li>
+        <li><button class="snipet"> = list(map(int, input().split()))</button> ←1行に整数不定数 例）<var>A<sub>1</sub> A<sub>2</sub> … A<sub>N</sub> </var></li>
+        <li><button class="snipet"> = map(int, input().split())</button> ←1行に整数固定数 例）<var>A B C</var></li>
+        <li><button class="snipet"> = [list(map(int, input().split())) for _ in range(h)]</button> ← h 行の 2 次元整数配列</li>
+      </ul>
+    </fieldset>
 
     <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -90,6 +97,7 @@ Editor.editor = CodeMirror.fromTextArea(document.getElementById("txt-editor"), {
   lineNumbers: true,
   mode: "python",
   indentUnit: 4,
+  autoCloseBrackets: true,
 });
     </script>
   </body>
