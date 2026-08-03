@@ -2,7 +2,7 @@ BatchCodeTest.make_input = function(_input, constraints) {
     let input = _input.replaceAll(/ *_ */g, "_").trim() + "\n"
     const get_type = function(name) {
         const n = RegExp.escape(name)
-        if (constraints.match(new RegExp(`(?:^|, *)${n}.*(?:string|文字列)`, "mi"))) return "str"
+        if (constraints.match(new RegExp(`(?:^|, *)${n}.*(?:string|文字列|英大文字|英小文字)`, "mi"))) return "str"
         if (constraints.match(new RegExp(`(?:^|, *)${n}.*\`[^\`]\``, "mi"))) return "char"
         if (constraints.match(new RegExp(`(?:^|, *)${n}.*\`[^\`]{2,}\``, "mi"))) return "str"
         if (constraints.match(new RegExp(`(?:^|, *)${n}.*(?:decimal|小数)`, "mi"))) return "float"
