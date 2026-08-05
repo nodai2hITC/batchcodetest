@@ -7,7 +7,7 @@ BatchCodeTest.scrapes.push({
         const inputs  = Array.from(html.matchAll(/<h2>入力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
         const outputs = Array.from(html.matchAll(/<h2>出力例 *\d+<\/h2>\s*<pre[^>]*>\s*(.+?)\s*<\/pre>/gis), m => m[1]);
         let input = undefined;
-        const matched1 = html.match(/<h2>\s*入力\s*<\/h2>\s*<p>入力は[^<]*<\/p>\s*<div class="io_format">(.+?)<\/div>/s)
+        const matched1 = html.match(/<h2>\s*入力\s*<\/h2>\s*<p>\s*入力は[^<]*<\/p>\s*<div class="io_format">(.+?)<\/div>/s)
         if (matched1) {
             input = matched1[1].replaceAll(/<[^>]*>/g, " ").replaceAll(/  +/g, " ").replaceAll(/ \n/g, "\n").replaceAll(/\n /g, "\n").replaceAll(/\\[\(\)]/g, "")
         }
